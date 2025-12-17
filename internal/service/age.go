@@ -2,12 +2,15 @@ package service
 
 import "time"
 
-
-func calculateAge(dob time.Time) int {
+// CalculateAge returns age based on date of birth
+func CalculateAge(dob time.Time) int {
 	now := time.Now()
+
 	age := now.Year() - dob.Year()
 
-	if now.Month() < dob.Month() || (now.Month() == dob.Month() && now.Day() < dob.Day()) {
+	// If birthday hasn't occurred yet this year, subtract 1
+	if now.Month() < dob.Month() ||
+		(now.Month() == dob.Month() && now.Day() < dob.Day()) {
 		age--
 	}
 
