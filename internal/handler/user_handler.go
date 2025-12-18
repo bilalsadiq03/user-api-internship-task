@@ -89,6 +89,26 @@ func (h *UserHandler) GetUserByID(c *fiber.Ctx) error {
 	})
 }
 
+// Get All Users
+func (h *UserHandler) ListUsers(c *fiber.Ctx) error {
+	users, err := h.repo.GetAll(c.Context())
+	if err != nil {
+		return fiber.ErrInternalServerError
+	}
+
+	response := make([]fiber.Map, 0, len(users))
+	for _, user := range users {
+		response = append(response, fiber.Map{
+			"id":   user.ID,
+			"name": user.Name,
+			"dob":  user.Dob.Format("2006-01-02"),
+			"age":  service.CalculateAge(user.Dob),
+		})
+	}
+
+	return c.JSON(response)
+}
+
 
 //Update User
 func (h *UserHandler) UpdateUser(c *fiber.Ctx) error {
