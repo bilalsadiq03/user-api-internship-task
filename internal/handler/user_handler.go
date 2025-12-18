@@ -91,7 +91,12 @@ func (h *UserHandler) GetUserByID(c *fiber.Ctx) error {
 
 // Get All Users
 func (h *UserHandler) ListUsers(c *fiber.Ctx) error {
-	users, err := h.repo.GetAll(c.Context())
+	page, _ := strconv.Atoi(c.Query("page", "1"))
+	limit, _ := strconv.Atoi(c.Query("limit", "10"))
+
+	offset := (page - 1) * limit
+
+	users, err := h.repo.ListPaginated(c.Context(), int32(limit), int32(offset))
 	if err != nil {
 		return fiber.ErrInternalServerError
 	}

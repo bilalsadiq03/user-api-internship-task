@@ -60,25 +60,33 @@ func (q *Queries) GetUserByID(ctx context.Context, id int32) (GetUserByIDRow, er
 	return i, err
 }
 
-const listUsers = `-- name: ListUsers :many
-SELECT id, name, dob FROM users ORDER BY id
+const listUsersPaginated = `-- name: ListUsersPaginated :many
+SELECT id, name, dob 
+FROM users 
+ORDER BY id
+LIMIT $1 OFFSET $2
 `
 
-type ListUsersRow struct {
+type ListUsersPaginatedParams struct {
+	Limit  int32
+	Offset int32
+}
+
+type ListUsersPaginatedRow struct {
 	ID   int32
 	Name string
 	Dob  time.Time
 }
 
-func (q *Queries) ListUsers(ctx context.Context) ([]ListUsersRow, error) {
-	rows, err := q.db.QueryContext(ctx, listUsers)
+func (q *Queries) ListUsersPaginated(ctx context.Context, arg ListUsersPaginatedParams) ([]ListUsersPaginatedRow, error) {
+	rows, err := q.db.QueryContext(ctx, listUsersPaginated, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ListUsersRow
+	var items []ListUsersPaginatedRow
 	for rows.Next() {
-		var i ListUsersRow
+		var i ListUsersPaginatedRow
 		if err := rows.Scan(&i.ID, &i.Name, &i.Dob); err != nil {
 			return nil, err
 		}

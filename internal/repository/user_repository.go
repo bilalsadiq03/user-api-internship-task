@@ -42,10 +42,15 @@ func (r *UserRepository) GetByID(
 }
 
 // Get All Users
-func (r *UserRepository) GetAll(
+func (r *UserRepository) ListPaginated(
 	ctx context.Context,
-) ([]sqlc.ListUsersRow, error) {
-	return r.db.ListUsers(ctx)
+	limit int32,
+	offset int32,
+) ([]sqlc.ListUsersPaginatedRow, error) {
+	return r.db.ListUsersPaginated(ctx, sqlc.ListUsersPaginatedParams{
+		Limit:  limit,
+		Offset: offset,
+	})
 }
 
 // Delete User By ID

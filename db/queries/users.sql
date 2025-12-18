@@ -6,8 +6,11 @@ RETURNING id, name, dob;
 -- name: GetUserByID :one
 SELECT id, name, dob FROM users WHERE id = $1;
 
--- name: ListUsers :many
-SELECT id, name, dob FROM users ORDER BY id;
+-- name: ListUsersPaginated :many
+SELECT id, name, dob 
+FROM users 
+ORDER BY id
+LIMIT $1 OFFSET $2;
 
 -- name: UpdateUser :one
 UPDATE users
