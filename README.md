@@ -23,15 +23,42 @@ git clone "https://github.com/bilalsadiq03/user-api-internship-task"
 cd user-api
 ```
 
-### 2. Run with Go
+### 2. Install Dependencies
+```bash
+go mod tidy
+```
+
+### 3. Setup PostgreSQL
+Create a database:
+```bash
+CREATE DATABASE userdb;
+```
+
+Run migration:
+Create a database:
+```bash
+psql -U postgres -d userdb -f db/migrations/001_create_users.sql;
+```
+
+### 4. Configure Database Connection
+Make a file config/config.go and add database connection string
+
+### 5. Generate SQLC Code
+```bash
+sqlc generate
+```
+
+### 6. Run with Go
 ```bash
 go run cmd/server/main.go
 ```
 
-### 3. Run with Docker
+### 7. Run with Docker(Optional)
 ```bash
 docker-compose up --build
 ```
+
+### 8. Server will strat on: http://localhost:8080
 
 
 
